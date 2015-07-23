@@ -208,12 +208,19 @@ public class Main extends ActionBarActivity {
                 break;
 
             case R.id.btn_gyro:
-                bluetooth.showMovementButtons(gyroActivated);
-                gyroActivated = !gyroActivated;
-                if(!bluetooth.isConnected())
-                    bluetooth.connect();
-                else
+                if(gyroActivated)
+                {
                     bluetooth.disconnect();
+                    gyroActivated = false;
+                    bluetooth.showMovementButtons(true);
+                }
+                else
+                {
+                    bluetooth.connect();
+                    gyroActivated = true;
+                    bluetooth.showMovementButtons(false);
+                }
+
                 break;
         }
     }
