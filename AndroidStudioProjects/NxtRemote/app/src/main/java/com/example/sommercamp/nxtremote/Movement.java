@@ -9,7 +9,9 @@ import com.lego.minddroid.NxtConnection;
 
 public class Movement
 {
-    Bluetooth bluetooth;
+    private Bluetooth bluetooth;
+    private int leftEnginePower;
+    private int rightEnginePower;
 
     public Movement(Bluetooth bluetooth)
     {
@@ -53,6 +55,16 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
+        setEnginePower(-leftEnginePower, -rightEnginePower);
+
+        try
+        {
+            Thread.sleep(100);
+        } catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
         setEnginePower(0, 0);
     }
 
@@ -60,5 +72,8 @@ public class Movement
     {
         bluetooth.sendBTCMessage(0, NxtConnection.MOTOR_B, rightEngine, 0);
         bluetooth.sendBTCMessage(0, NxtConnection.MOTOR_C, leftEngine, 0);
+
+        leftEnginePower = leftEngine;
+        rightEnginePower = rightEngine;
     }
 }
