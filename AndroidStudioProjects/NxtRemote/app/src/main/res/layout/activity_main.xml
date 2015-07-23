@@ -77,7 +77,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hold for Gyro"
+            android:text="Gyro Sensor"
             android:id="@+id/btn_gyro"
             android:onClick="onClick" />
 

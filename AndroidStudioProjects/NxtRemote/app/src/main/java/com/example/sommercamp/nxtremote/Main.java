@@ -25,8 +25,8 @@ public class Main extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.touch);
-        currentLayout = CurrentLayout.touch;
+        setContentView(R.layout.activity_main);
+        currentLayout = CurrentLayout.main;
 
         SensorManager sensorManager = ((SensorManager) getSystemService(Context.SENSOR_SERVICE));
         sensorManager.registerListener(accelerometer, sensorManager
@@ -45,12 +45,18 @@ public class Main extends ActionBarActivity {
         public void onSensorChanged(SensorEvent event) {
             if (bluetooth != null && bluetooth.isConnected() && gyroActivated)
             {
-                Log.i("GyroSensor", event.values[2] + " - " + event.values[1]);
                 double roll = Math.min(event.values[2], 50);
                 double pitch = Math.min(event.values[1], 25);
 
-                movement.setEnginePower((int)(pitch * 2 + (-1* Math.abs(roll)+50)),
-                        (int)(pitch*2+(-1* Math.abs(roll)+50)));
+               if (roll < 0)
+               {
+                   movement.setEnginePower((int)(pitch * 2 + 50),
+                           (int)((pitch*2 + roll)*2));
+               }
+               else {
+                   movement.setEnginePower((int)((pitch*2 - roll)*2),
+                           (int)(pitch * 2 + 50));
+               }
             }
         }
     };
@@ -204,6 +210,10 @@ public class Main extends ActionBarActivity {
             case R.id.btn_gyro:
                 bluetooth.showMovementButtons(gyroActivated);
                 gyroActivated = !gyroActivated;
+                if(!bluetooth.isConnected())
+                    bluetooth.connect();
+                else
+                    bluetooth.disconnect();
                 break;
         }
     }
