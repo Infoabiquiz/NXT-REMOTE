@@ -33,13 +33,45 @@ public class Main extends ActionBarActivity {
                         public boolean onTouch(View v, MotionEvent event) {
                             if(v.getId() == R.id.touchArea)
                             {
-                                Point touchedPoint = new Point((int)event.getRawX(),
-                                        (int)event.getRawY());
+                                Point touchedPoint = new Point((int)event.getX(),
+                                        (int)event.getY());
 
                                 Point middlePoint = new Point(v.getMeasuredWidth() / 2,
                                         v.getMeasuredHeight() / 2);
 
+                                double radius = v.getMeasuredWidth() / 2;
 
+                                double strength = Math.sqrt(Math.pow(touchedPoint.x
+                                        - middlePoint.x, 2) + Math.pow(touchedPoint.y
+                                        - middlePoint.y, 2)) / radius;
+
+                                double xFactor = (touchedPoint.x - middlePoint.x) / radius;
+                                double yFactor = -(touchedPoint.y - middlePoint.y) / radius;
+
+                                yFactor = Math.max(-100, Math.min(100, yFactor));
+
+                                if(strength < 0.15)
+                                    movement.setEnginePower(0, 0);
+                                else
+                                {
+                                    int leftPower  = (int) (100 * yFactor);
+                                    int rightPower = (int) (100 * yFactor);
+
+                                    double tmp = 0;
+
+                                    if (touchedPoint.x >= radius)
+                                    {
+                                        tmp = strength * 100
+                                                * ((v.getMeasuredWidth() - touchedPoint.x) / radius);
+                                        movement.setEnginePower(leftPower, (int)tmp);
+                                    }
+                                    else
+                                    {
+                                        tmp = strength * 100
+                                                * ((v.getMeasuredWidth() - touchedPoint.x) / radius);
+                                        movement.setEnginePower((int)tmp, rightPower);
+                                    }
+                                }
 
                                 return true;
                             }

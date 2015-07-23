@@ -1,5 +1,7 @@
 package com.example.sommercamp.nxtremote;
 
+import android.util.Log;
+
 import com.lego.minddroid.NxtConnection;
 
 /**
@@ -68,12 +70,17 @@ public class Movement
         setEnginePower(0, 0);
     }
 
-    private void setEnginePower(int leftEngine, int rightEngine)
+    public void setEnginePower(int leftEngine, int rightEngine)
     {
+        if(!bluetooth.isConnected())
+            return;
+
         bluetooth.sendBTCMessage(0, NxtConnection.MOTOR_B, rightEngine, 0);
         bluetooth.sendBTCMessage(0, NxtConnection.MOTOR_C, leftEngine, 0);
 
         leftEnginePower = leftEngine;
         rightEnginePower = rightEngine;
+
+        Log.i("MotorPower: ", leftEngine + " - " + rightEngine);
     }
 }
