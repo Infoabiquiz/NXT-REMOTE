@@ -180,6 +180,7 @@ public class Main extends ActionBarActivity {
                 break;
             case R.id.btn_stop:
                 movement.stop();
+                gyroActivated = false;
                 Log.i(getClass().getName(),"btn_stop");
                 break;
             case R.id.btn_right:
