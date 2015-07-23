@@ -22,6 +22,14 @@ public class Main extends ActionBarActivity {
         setContentView(R.layout.touch);
         currentLayout = CurrentLayout.touch;
 
+        init();
+    }
+
+    private void init()
+    {
+        if(bluetooth != null)
+            bluetooth.disconnect();
+
         bluetooth = new Bluetooth(this);
         movement = new Movement(bluetooth);
 
@@ -156,10 +164,12 @@ public class Main extends ActionBarActivity {
             case R.id.btn_switch_layout:
                 currentLayout = CurrentLayout.touch;
                 setContentView(R.layout.touch);
+                init();
                 break;
             case R.id.btn_switch_layout2:
                 currentLayout = CurrentLayout.main;
                 setContentView(R.layout.activity_main);
+                init();
                 break;
         }
     }
