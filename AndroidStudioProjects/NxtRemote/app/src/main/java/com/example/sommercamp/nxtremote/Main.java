@@ -1,25 +1,53 @@
 package com.example.sommercamp.nxtremote;
 
+import android.graphics.Point;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
 public class Main extends ActionBarActivity {
 
-    Bluetooth bluetooth;
-    Movement movement;
+    private Bluetooth bluetooth;
+    private Movement movement;
+    public CurrentLayout currentLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.touch);
+        currentLayout = CurrentLayout.touch;
 
         bluetooth = new Bluetooth(this);
         movement = new Movement(bluetooth);
+
+        if(currentLayout == CurrentLayout.touch)
+        {
+            findViewById(R.id.touchArea).setOnTouchListener(
+                    new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            if(v.getId() == R.id.touchArea)
+                            {
+                                Point touchedPoint = new Point((int)event.getRawX(),
+                                        (int)event.getRawY());
+
+                                Point middlePoint = new Point(v.getMeasuredWidth() / 2,
+                                        v.getMeasuredHeight() / 2);
+
+
+
+                                return true;
+                            }
+                            return false;
+                        }
+                    }
+            );
+        }
     }
 
     @Override
@@ -84,6 +112,14 @@ public class Main extends ActionBarActivity {
                 Log.i(getClass().getName(),"btn_right");
                 break;
 
+
+            case R.id.btn_connect2:
+                Log.i(getClass().getName(), "btn_connect2");
+                if(!bluetooth.isConnected())
+                    bluetooth.connect();
+                else
+                    bluetooth.disconnect();
+                break;
         }
     }
 }

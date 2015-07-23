@@ -13,8 +13,6 @@ import android.widget.Toast;
 
 import com.lego.minddroid.NxtConnection;
 
-import java.util.Set;
-
 /**
  * Created by sommercamp on 21.07.15.
  *
@@ -46,14 +44,24 @@ public class Bluetooth extends Handler
             Log.i("Bluetooth", "bluetooth adapter enabled");
         }
 
-        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-        nxtMacAddress = pairedDevices.iterator().next().getAddress();
+        nxtMacAddress = "";
+        for(BluetoothDevice bluetoothDevice : bluetoothAdapter.getBondedDevices())
+        {
+            if(bluetoothDevice.getName().toLowerCase().contains("nxt"))
+            {
+                nxtMacAddress = bluetoothDevice.getAddress();
+                break;
+            }
+        }
 
         if(nxtConnection == null || !nxtConnection.isConnected())
         {
             nxtConnection = new NxtConnection(main, this, bluetoothAdapter);
             nxtConnection.setMACAddress(nxtMacAddress);
-            main.findViewById(R.id.btn_connect).setEnabled(false);
+            if(main.currentLayout == CurrentLayout.main)
+                main.findViewById(R.id.btn_connect).setEnabled(false);
+            else
+                main.findViewById(R.id.btn_connect2).setEnabled(false);
             nxtConnection.start();
         }
     }
@@ -69,7 +77,10 @@ public class Bluetooth extends Handler
 
             isConnected = false;
             showMovementButtons(false);
-            ((Button)main.findViewById(R.id.btn_connect)).setText("Connect");
+            if(main.currentLayout == CurrentLayout.main)
+                ((Button)main.findViewById(R.id.btn_connect)).setText("Connect");
+            else
+                ((Button)main.findViewById(R.id.btn_connect2)).setText("Connect");
         }
     }
 
@@ -88,11 +99,15 @@ public class Bluetooth extends Handler
 
                 isConnected = true;
                 showMovementButtons(true);
-                ((Button)main.findViewById(R.id.btn_connect)).setText("Disconnect");
+                if(main.currentLayout == CurrentLayout.main)
+                    ((Button)main.findViewById(R.id.btn_connect)).setText("Disconnect");
+                else
+                    ((Button)main.findViewById(R.id.btn_connect2)).setText("Disconnect");
                 break;
 
             case NxtConnection.CONNECT_ERROR:
-                Toast.makeText(main, "Failed connecting", Toast.LENGTH_SHORT).show();
+                Toast.makeText(main, "Failed connecting, connection error",
+                        Toast.LENGTH_SHORT).show();
                 break;
 
             default:
@@ -100,18 +115,24 @@ public class Bluetooth extends Handler
                 break;
         }
 
-        main.findViewById(R.id.btn_connect).setEnabled(true);
+        if(main.currentLayout == CurrentLayout.main)
+            main.findViewById(R.id.btn_connect).setEnabled(true);
+        else
+            main.findViewById(R.id.btn_connect2).setEnabled(true);
     }
 
     private void showMovementButtons(boolean show)
     {
-        int visibility = show ? View.VISIBLE : View.GONE;
+        if(main != null && main.currentLayout != null && (main.currentLayout == CurrentLayout.main))
+        {
+            int visibility = show ? View.VISIBLE : View.GONE;
 
-        main.findViewById(R.id.btn_forwards).setVisibility(visibility);
-        main.findViewById(R.id.btn_backwards).setVisibility(visibility);
-        main.findViewById(R.id.btn_left).setVisibility(visibility);
-        main.findViewById(R.id.btn_right).setVisibility(visibility);
-        main.findViewById(R.id.btn_stop).setVisibility(visibility);
+            main.findViewById(R.id.btn_forwards).setVisibility(visibility);
+            main.findViewById(R.id.btn_backwards).setVisibility(visibility);
+            main.findViewById(R.id.btn_left).setVisibility(visibility);
+            main.findViewById(R.id.btn_right).setVisibility(visibility);
+            main.findViewById(R.id.btn_stop).setVisibility(visibility);
+        }
     }
 
     public void sendBTCMessage(int delay, int messageID, int value1, int value2)

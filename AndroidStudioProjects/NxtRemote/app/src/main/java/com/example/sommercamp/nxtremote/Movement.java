@@ -23,7 +23,7 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        setEnginePower(60, 60);
+        setEnginePower(55, 55);
     }
 
     public void moveBackwards()
@@ -31,7 +31,7 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        setEnginePower(-60, -60);
+        setEnginePower(-55, -55);
     }
 
     public void turnRight()
@@ -39,7 +39,7 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        setEnginePower(60, -60);
+        setEnginePower(55, -55);
     }
 
     public void turnLeft()
@@ -47,7 +47,7 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        setEnginePower(-60, 60);
+        setEnginePower(-55, 55);
     }
 
     public void stop()
