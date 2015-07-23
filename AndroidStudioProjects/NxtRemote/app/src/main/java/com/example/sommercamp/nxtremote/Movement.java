@@ -15,6 +15,9 @@ public class Movement
     private int leftEnginePower;
     private int rightEnginePower;
 
+    private CurrentMovement currentMovement;
+    private int clickCounter = 50;
+
     public Movement(Bluetooth bluetooth)
     {
         this.bluetooth = bluetooth;
@@ -25,7 +28,14 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        setEnginePower(55, 55);
+        if (currentMovement == CurrentMovement.forwards){
+            clickCounter +=10;
+            currentMovement = CurrentMovement.forwards;
+        }
+        else{
+            clickCounter = 50;
+        }
+        setEnginePower(clickCounter, clickCounter);
     }
 
     public void moveBackwards()
@@ -33,7 +43,15 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        setEnginePower(-55, -55);
+        if (currentMovement == CurrentMovement.backwards){
+            clickCounter +=10;
+            currentMovement = CurrentMovement.backwards;
+        }
+        else{
+            clickCounter = 50;
+        }
+
+        setEnginePower(-clickCounter, -clickCounter);
     }
 
     public void turnRight()
@@ -41,7 +59,15 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        setEnginePower(55, -55);
+        if (currentMovement == CurrentMovement.right){
+            clickCounter +=10;
+            currentMovement = CurrentMovement.right;
+        }
+        else{
+            clickCounter = 50;
+        }
+
+        setEnginePower(clickCounter, -clickCounter);
     }
 
     public void turnLeft()
@@ -49,7 +75,15 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        setEnginePower(-55, 55);
+        if (currentMovement == CurrentMovement.left){
+            clickCounter +=10;
+            currentMovement = CurrentMovement.left;
+        }
+        else{
+            clickCounter = 50;
+        }
+
+        setEnginePower(-clickCounter, clickCounter);
     }
 
     public void stop()
@@ -66,8 +100,9 @@ public class Movement
         {
             e.printStackTrace();
         }
-
+        clickCounter = 50;
         setEnginePower(0, 0);
+        currentMovement = CurrentMovement.stop;
     }
 
     public void setEnginePower(int leftEngine, int rightEngine)
