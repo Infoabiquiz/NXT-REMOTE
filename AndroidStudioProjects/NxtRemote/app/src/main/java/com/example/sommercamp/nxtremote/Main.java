@@ -6,16 +6,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
-public class Main extends ActionBarActivity {
+public class Main extends AppCompatActivity {
 
     private Bluetooth bluetooth;
     private Movement movement;
@@ -48,15 +46,22 @@ public class Main extends ActionBarActivity {
                 double roll = Math.min(event.values[2], 50);
                 double pitch = Math.min(event.values[1], 25);
 
-               if (roll < 0)
-               {
-                   movement.setEnginePower((int)(pitch * 2 + 50),
+                if(Math.abs(roll) < 10)
+                {
+                    movement.setEnginePower((int)(pitch * 2 + 50),
+                            (int)(pitch * 2 + 50));
+                    return;
+                }
+
+                if (roll < 0)
+                {
+                    movement.setEnginePower((int)(pitch * 2 + 50),
                            (int)((pitch*2 + roll)*2));
-               }
-               else {
+                }
+                else {
                    movement.setEnginePower((int)((pitch*2 - roll)*2),
-                           (int)(pitch * 2 + 50));
-               }
+                            (int)(pitch * 2 + 50));
+                }
             }
         }
     };
@@ -147,12 +152,6 @@ public class Main extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showError(String className, String msg)
-    {
-        Log.e(className, msg);
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-    }
-
     public Main() {
         super();
     }
@@ -160,37 +159,34 @@ public class Main extends ActionBarActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_connect:
-                Log.i(getClass().getName(), "btn_connect");
                 if(!bluetooth.isConnected())
                     bluetooth.connect();
                 else
                     bluetooth.disconnect();
                 break;
+
             case R.id.btn_forwards:
                 movement.moveForwards();
-                Log.i(getClass().getName(),"btn_forwards");
                 break;
+
             case R.id.btn_backwards:
                 movement.moveBackwards();
-                Log.i(getClass().getName(),"btn_backwards");
                 break;
+
             case R.id.btn_left:
                 movement.turnLeft();
-                Log.i(getClass().getName(),"btn_left");
                 break;
+
             case R.id.btn_stop:
                 movement.stop();
                 gyroActivated = false;
-                Log.i(getClass().getName(),"btn_stop");
                 break;
+
             case R.id.btn_right:
                 movement.turnRight();
-                Log.i(getClass().getName(),"btn_right");
                 break;
 
-
             case R.id.btn_connect2:
-                Log.i(getClass().getName(), "btn_connect2");
                 if(!bluetooth.isConnected())
                     bluetooth.connect();
                 else
@@ -202,6 +198,7 @@ public class Main extends ActionBarActivity {
                 setContentView(R.layout.touch);
                 init();
                 break;
+
             case R.id.btn_switch_layout2:
                 currentLayout = CurrentLayout.main;
                 setContentView(R.layout.activity_main);
@@ -221,7 +218,6 @@ public class Main extends ActionBarActivity {
                     gyroActivated = true;
                     bluetooth.showMovementButtons(false);
                 }
-
                 break;
         }
     }

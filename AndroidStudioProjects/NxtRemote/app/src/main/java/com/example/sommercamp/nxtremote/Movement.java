@@ -16,6 +16,7 @@ public class Movement
     private int rightEnginePower;
 
     private CurrentMovement currentMovement;
+    private final static int startValue = 65;
     private int clickCounter = 65;
 
     public Movement(Bluetooth bluetooth)
@@ -33,7 +34,7 @@ public class Movement
 
         }
         else{
-            clickCounter = 65;
+            clickCounter = startValue;
             currentMovement = CurrentMovement.forwards;
         }
         setEnginePower(clickCounter, clickCounter);
@@ -49,7 +50,7 @@ public class Movement
 
         }
         else{
-            clickCounter = 65;
+            clickCounter = startValue;
             currentMovement = CurrentMovement.backwards;
         }
 
@@ -66,7 +67,7 @@ public class Movement
 
         }
         else{
-            clickCounter = 65;
+            clickCounter = startValue;
             currentMovement = CurrentMovement.right;
         }
 
@@ -83,7 +84,7 @@ public class Movement
 
         }
         else{
-            clickCounter = 65;
+            clickCounter = startValue;
             currentMovement = CurrentMovement.left;
         }
 
@@ -104,7 +105,7 @@ public class Movement
         {
             e.printStackTrace();
         }
-        clickCounter = 65;
+        clickCounter = startValue;
         setEnginePower(0, 0);
         currentMovement = CurrentMovement.stop;
     }
