@@ -3,6 +3,7 @@ package com.example.sommercamp.nxtremote;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -60,6 +61,7 @@ public class Bluetooth extends Handler
     {
         if(nxtConnection != null && nxtConnection.isConnected())
         {
+            sendBTCMessage(NxtConnection.NO_DELAY, NxtConnection.DISCONNECT, 0, 0);
             nxtConnection = null;
             nxtMacAddress = "";
             Toast.makeText(main, "Disconnected", Toast.LENGTH_SHORT).show();
@@ -107,5 +109,26 @@ public class Bluetooth extends Handler
         main.findViewById(R.id.btn_left).setVisibility(visibility);
         main.findViewById(R.id.btn_right).setVisibility(visibility);
         main.findViewById(R.id.btn_stop).setVisibility(visibility);
+    }
+
+    public void sendBTCMessage(int delay, int messageID, int value1, int value2)
+    {
+        try
+        {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Bundle myBundle = new Bundle();
+
+        myBundle.putInt("message", messageID);
+        myBundle.putInt("value1", value1);
+        myBundle.putInt("value2", value2);
+
+        Message message = obtainMessage();
+        message.setData(myBundle);
+
+        nxtConnection.getHandler().sendMessage(message);
     }
 }

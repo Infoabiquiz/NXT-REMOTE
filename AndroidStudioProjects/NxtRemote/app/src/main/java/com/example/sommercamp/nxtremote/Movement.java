@@ -1,5 +1,7 @@
 package com.example.sommercamp.nxtremote;
 
+import com.lego.minddroid.NxtConnection;
+
 /**
  * Created by sommercamp on 21.07.15.
  *
@@ -19,7 +21,7 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        // TODO
+        setEnginePower(60, 60);
     }
 
     public void moveBackwards()
@@ -27,7 +29,7 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        // TODO
+        setEnginePower(-60, -60);
     }
 
     public void turnRight()
@@ -35,7 +37,7 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        // TODO
+        setEnginePower(60, -60);
     }
 
     public void turnLeft()
@@ -43,7 +45,7 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        // TODO
+        setEnginePower(-60, 60);
     }
 
     public void stop()
@@ -51,6 +53,12 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        // TODO
+        setEnginePower(0, 0);
+    }
+
+    private void setEnginePower(int leftEngine, int rightEngine)
+    {
+        bluetooth.sendBTCMessage(0, NxtConnection.MOTOR_B, rightEngine, 0);
+        bluetooth.sendBTCMessage(0, NxtConnection.MOTOR_C, leftEngine, 0);
     }
 }
