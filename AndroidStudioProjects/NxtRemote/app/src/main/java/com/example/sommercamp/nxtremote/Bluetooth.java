@@ -121,7 +121,7 @@ public class Bluetooth extends Handler
             main.findViewById(R.id.btn_connect2).setEnabled(true);
     }
 
-    private void showMovementButtons(boolean show)
+    public void showMovementButtons(boolean show)
     {
         if(main != null && main.currentLayout != null && (main.currentLayout == CurrentLayout.main))
         {

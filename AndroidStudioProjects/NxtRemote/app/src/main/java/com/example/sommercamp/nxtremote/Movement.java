@@ -30,10 +30,11 @@ public class Movement
 
         if (currentMovement == CurrentMovement.forwards){
             clickCounter +=10;
-            currentMovement = CurrentMovement.forwards;
+
         }
         else{
             clickCounter = 50;
+            currentMovement = CurrentMovement.forwards;
         }
         setEnginePower(clickCounter, clickCounter);
     }
@@ -45,10 +46,11 @@ public class Movement
 
         if (currentMovement == CurrentMovement.backwards){
             clickCounter +=10;
-            currentMovement = CurrentMovement.backwards;
+
         }
         else{
             clickCounter = 50;
+            currentMovement = CurrentMovement.backwards;
         }
 
         setEnginePower(-clickCounter, -clickCounter);
@@ -61,10 +63,11 @@ public class Movement
 
         if (currentMovement == CurrentMovement.right){
             clickCounter +=10;
-            currentMovement = CurrentMovement.right;
+
         }
         else{
             clickCounter = 50;
+            currentMovement = CurrentMovement.right;
         }
 
         setEnginePower(clickCounter, -clickCounter);
@@ -77,10 +80,11 @@ public class Movement
 
         if (currentMovement == CurrentMovement.left){
             clickCounter +=10;
-            currentMovement = CurrentMovement.left;
+
         }
         else{
             clickCounter = 50;
+            currentMovement = CurrentMovement.left;
         }
 
         setEnginePower(-clickCounter, clickCounter);

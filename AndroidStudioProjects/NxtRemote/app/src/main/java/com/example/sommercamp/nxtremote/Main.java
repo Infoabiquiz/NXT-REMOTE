@@ -1,6 +1,11 @@
 package com.example.sommercamp.nxtremote;
 
+import android.content.Context;
 import android.graphics.Point;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +20,7 @@ public class Main extends ActionBarActivity {
     private Bluetooth bluetooth;
     private Movement movement;
     public CurrentLayout currentLayout;
+    private boolean gyroActivated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +28,32 @@ public class Main extends ActionBarActivity {
         setContentView(R.layout.touch);
         currentLayout = CurrentLayout.touch;
 
+        SensorManager sensorManager = ((SensorManager) getSystemService(Context.SENSOR_SERVICE));
+        sensorManager.registerListener(accelerometer, sensorManager
+                        .getSensorList(Sensor.TYPE_ORIENTATION).get(0),
+                SensorManager.SENSOR_DELAY_GAME);
+
         init();
     }
+
+    private final SensorEventListener accelerometer = new SensorEventListener() {
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if (bluetooth != null && bluetooth.isConnected() && gyroActivated)
+            {
+                Log.i("GyroSensor", event.values[2] + " - " + event.values[1]);
+                double roll = Math.min(event.values[2], 50);
+                double pitch = Math.min(event.values[1], 25);
+
+                movement.setEnginePower((int)(pitch * 2 + (-1* Math.abs(roll)+50)),
+                        (int)(pitch*2+(-1* Math.abs(roll)+50)));
+            }
+        }
+    };
 
     private void init()
     {
@@ -53,7 +83,6 @@ public class Main extends ActionBarActivity {
                                         - middlePoint.x, 2) + Math.pow(touchedPoint.y
                                         - middlePoint.y, 2)) / radius;
 
-                                double xFactor = (touchedPoint.x - middlePoint.x) / radius;
                                 double yFactor = -(touchedPoint.y - middlePoint.y) / radius;
 
                                 yFactor = Math.max(-100, Math.min(100, yFactor));
@@ -65,7 +94,7 @@ public class Main extends ActionBarActivity {
                                     int leftPower  = (int) (100 * yFactor);
                                     int rightPower = (int) (100 * yFactor);
 
-                                    double tmp = 0;
+                                    double tmp;
 
                                     if (touchedPoint.x >= radius)
                                     {
@@ -170,6 +199,11 @@ public class Main extends ActionBarActivity {
                 currentLayout = CurrentLayout.main;
                 setContentView(R.layout.activity_main);
                 init();
+                break;
+
+            case R.id.btn_gyro:
+                bluetooth.showMovementButtons(gyroActivated);
+                gyroActivated = !gyroActivated;
                 break;
         }
     }
