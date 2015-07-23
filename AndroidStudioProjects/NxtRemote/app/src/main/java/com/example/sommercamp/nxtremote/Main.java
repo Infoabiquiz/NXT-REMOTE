@@ -13,7 +13,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class Main extends AppCompatActivity {
+public class Main extends AppCompatActivity
+{
 
     private Bluetooth bluetooth;
     private Movement movement;
@@ -21,7 +22,8 @@ public class Main extends AppCompatActivity {
     private boolean gyroActivated = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         currentLayout = CurrentLayout.main;
@@ -34,13 +36,15 @@ public class Main extends AppCompatActivity {
         init();
     }
 
-    private final SensorEventListener accelerometer = new SensorEventListener() {
+    private final SensorEventListener accelerometer = new SensorEventListener()
+    {
 
         @Override
         public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
         @Override
-        public void onSensorChanged(SensorEvent event) {
+        public void onSensorChanged(SensorEvent event)
+        {
             if (bluetooth != null && bluetooth.isConnected() && gyroActivated)
             {
                 double roll = Math.min(event.values[2], 50);
@@ -56,10 +60,10 @@ public class Main extends AppCompatActivity {
                 if (roll < 0)
                 {
                     movement.setEnginePower((int)(pitch * 2 + 50),
-                           (int)((pitch*2 + roll)*2));
+                           (int)((pitch*2 + roll) * 2));
                 }
                 else {
-                   movement.setEnginePower((int)((pitch*2 - roll)*2),
+                   movement.setEnginePower((int)((pitch*2 - roll) * 2),
                             (int)(pitch * 2 + 50));
                 }
             }
@@ -77,9 +81,11 @@ public class Main extends AppCompatActivity {
         if(currentLayout == CurrentLayout.touch)
         {
             findViewById(R.id.touchArea).setOnTouchListener(
-                    new View.OnTouchListener() {
+                    new View.OnTouchListener()
+                    {
                         @Override
-                        public boolean onTouch(View v, MotionEvent event) {
+                        public boolean onTouch(View v, MotionEvent event)
+                        {
                             if(v.getId() == R.id.touchArea)
                             {
                                 Point touchedPoint = new Point((int)event.getX(),
@@ -131,14 +137,16 @@ public class Main extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -152,12 +160,15 @@ public class Main extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public Main() {
+    public Main()
+    {
         super();
     }
 
-    public void onClick(View view) {
-        switch (view.getId()) {
+    public void onClick(View view)
+    {
+        switch (view.getId())
+        {
             case R.id.btn_connect:
                 if(!bluetooth.isConnected())
                     bluetooth.connect();
@@ -178,8 +189,8 @@ public class Main extends AppCompatActivity {
                 break;
 
             case R.id.btn_stop:
-                movement.stop();
                 gyroActivated = false;
+                movement.stop();
                 break;
 
             case R.id.btn_right:
@@ -190,16 +201,18 @@ public class Main extends AppCompatActivity {
                 if(!bluetooth.isConnected())
                     bluetooth.connect();
                 else
-                    bluetooth.disconnect();
+                    stopAndDisconnect();
                 break;
 
             case R.id.btn_switch_layout:
+                stopAndDisconnect();
                 currentLayout = CurrentLayout.touch;
                 setContentView(R.layout.touch);
                 init();
                 break;
 
             case R.id.btn_switch_layout2:
+                stopAndDisconnect();
                 currentLayout = CurrentLayout.main;
                 setContentView(R.layout.activity_main);
                 init();
@@ -220,5 +233,14 @@ public class Main extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    public void stopAndDisconnect()
+    {
+        gyroActivated = false;
+        movement.stop();
+
+        if(bluetooth != null)
+            bluetooth.disconnect();
     }
 }

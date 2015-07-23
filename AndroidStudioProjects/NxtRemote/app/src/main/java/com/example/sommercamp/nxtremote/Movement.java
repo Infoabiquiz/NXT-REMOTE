@@ -1,7 +1,5 @@
 package com.example.sommercamp.nxtremote;
 
-import android.util.Log;
-
 import com.lego.minddroid.NxtConnection;
 
 /**
@@ -29,14 +27,8 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        if (currentMovement == CurrentMovement.forwards){
-            clickCounter +=10;
+        handleMovementStateChanges(CurrentMovement.forwards);
 
-        }
-        else{
-            clickCounter = startValue;
-            currentMovement = CurrentMovement.forwards;
-        }
         setEnginePower(clickCounter, clickCounter);
     }
 
@@ -45,14 +37,7 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        if (currentMovement == CurrentMovement.backwards){
-            clickCounter +=10;
-
-        }
-        else{
-            clickCounter = startValue;
-            currentMovement = CurrentMovement.backwards;
-        }
+        handleMovementStateChanges(CurrentMovement.backwards);
 
         setEnginePower(-clickCounter, -clickCounter);
     }
@@ -62,14 +47,7 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        if (currentMovement == CurrentMovement.right){
-            clickCounter +=10;
-
-        }
-        else{
-            clickCounter = startValue;
-            currentMovement = CurrentMovement.right;
-        }
+        handleMovementStateChanges(CurrentMovement.right);
 
         setEnginePower(clickCounter - 10, -clickCounter + 10);
     }
@@ -79,16 +57,20 @@ public class Movement
         if(!bluetooth.isConnected())
             return;
 
-        if (currentMovement == CurrentMovement.left){
-            clickCounter +=10;
-
-        }
-        else{
-            clickCounter = startValue;
-            currentMovement = CurrentMovement.left;
-        }
+        handleMovementStateChanges(CurrentMovement.left);
 
         setEnginePower(-clickCounter + 10, clickCounter - 10);
+    }
+
+    private void handleMovementStateChanges(CurrentMovement nextMovement)
+    {
+        if (currentMovement == nextMovement)
+            clickCounter += 10;
+        else
+        {
+            clickCounter = startValue;
+            currentMovement = nextMovement;
+        }
     }
 
     public void stop()
@@ -101,12 +83,14 @@ public class Movement
         try
         {
             Thread.sleep(100);
-        } catch (InterruptedException e)
+        }
+        catch (InterruptedException e)
         {
             e.printStackTrace();
         }
-        clickCounter = startValue;
+
         setEnginePower(0, 0);
+        clickCounter = startValue;
         currentMovement = CurrentMovement.stop;
     }
 
@@ -120,7 +104,5 @@ public class Movement
 
         leftEnginePower = leftEngine;
         rightEnginePower = rightEngine;
-
-        Log.i("MotorPower: ", leftEngine + " - " + rightEngine);
     }
 }
