@@ -152,6 +152,15 @@ public class Main extends ActionBarActivity {
                 else
                     bluetooth.disconnect();
                 break;
+
+            case R.id.btn_switch_layout:
+                currentLayout = CurrentLayout.touch;
+                setContentView(R.layout.touch);
+                break;
+            case R.id.btn_switch_layout2:
+                currentLayout = CurrentLayout.main;
+                setContentView(R.layout.activity_main);
+                break;
         }
     }
 }
