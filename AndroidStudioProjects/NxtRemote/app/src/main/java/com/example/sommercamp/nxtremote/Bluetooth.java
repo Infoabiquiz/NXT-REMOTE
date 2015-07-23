@@ -53,6 +53,7 @@ public class Bluetooth extends Handler
         {
             nxtConnection = new NxtConnection(main, this, bluetoothAdapter);
             nxtConnection.setMACAddress(nxtMacAddress);
+            main.findViewById(R.id.btn_connect).setEnabled(false);
             nxtConnection.start();
         }
     }
@@ -98,6 +99,8 @@ public class Bluetooth extends Handler
                 Toast.makeText(main, "Failed connecting", Toast.LENGTH_SHORT).show();
                 break;
         }
+
+        main.findViewById(R.id.btn_connect).setEnabled(true);
     }
 
     private void showMovementButtons(boolean show)
