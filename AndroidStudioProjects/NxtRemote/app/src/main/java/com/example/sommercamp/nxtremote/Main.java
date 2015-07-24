@@ -50,7 +50,7 @@ public class Main extends AppCompatActivity
                 double roll = Math.min(event.values[2], 50);
                 double pitch = Math.min(event.values[1], 25);
 
-                if(Math.abs(roll) < 10)
+                if(Math.abs(roll) < 15)
                 {
                     movement.setEnginePower((int)(pitch * 2 + 50),
                             (int)(pitch * 2 + 50));
@@ -114,7 +114,7 @@ public class Main extends AppCompatActivity
 
                                     double tmp;
 
-                                    if (touchedPoint.x >= radius)
+                                    if (touchedPoint.x <= radius)
                                     {
                                         tmp = strength * 100
                                                 * ((v.getMeasuredWidth() - touchedPoint.x) / radius);
@@ -223,7 +223,7 @@ public class Main extends AppCompatActivity
                 {
                     bluetooth.disconnect();
                     gyroActivated = false;
-                    bluetooth.showMovementButtons(true);
+                    bluetooth.showMovementButtons(false);
                 }
                 else
                 {
