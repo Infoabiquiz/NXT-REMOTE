@@ -12,7 +12,7 @@ public class Movement
     private Bluetooth bluetooth;
     private int leftEnginePower;
     private int rightEnginePower;
-    private int movementState = 1;
+    private boolean movingForwards;
 
     private MovementMode currentMovement;
     private final static int startValue = 65;
@@ -34,23 +34,23 @@ public class Movement
         {
             case forwards:
                 setEnginePower(clickCounter, clickCounter);
-                movementState = 1;
+                movingForwards = true;
                 break;
 
             case backwards:
                 setEnginePower(-clickCounter, -clickCounter);
-                movementState = -1;
+                movingForwards = false;
                 break;
 
             case left:
-                if (movementState == 1)
+                if (movingForwards)
                     setEnginePower(clickCounter / 2, clickCounter + 10);
                 else
                     setEnginePower(-clickCounter / 2, -clickCounter);
                 break;
 
             case right:
-                if (movementState == 1)
+                if (movingForwards)
                     setEnginePower(clickCounter + 10, clickCounter / 2);
                 else
                     setEnginePower(-clickCounter, -clickCounter / 2);
