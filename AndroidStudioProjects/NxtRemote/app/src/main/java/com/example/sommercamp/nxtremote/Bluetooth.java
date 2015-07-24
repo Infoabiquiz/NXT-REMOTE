@@ -67,6 +67,8 @@ public class Bluetooth extends Handler
     {
         if(nxtConnection != null && nxtConnection.isConnected())
         {
+            sendBTCMessage(0, NxtConnection.MOTOR_B, 0, 0);
+            sendBTCMessage(0, NxtConnection.MOTOR_C, 0, 0);
             sendBTCMessage(NxtConnection.NO_DELAY, NxtConnection.DISCONNECT, 0, 0);
             nxtConnection = null;
             nxtMacAddress = "";
@@ -78,12 +80,9 @@ public class Bluetooth extends Handler
                 ((Button)main.findViewById(R.id.btn_connect)).setText("Connect");
             else
                 ((Button)main.findViewById(R.id.btn_connect2)).setText("Connect");
+
+            Log.i("Bluetooth", "disconnect()");
         }
-    }
-
-    public void forceStopAndDisconnect()
-    {
-
     }
 
     public boolean isConnected()
@@ -98,6 +97,7 @@ public class Bluetooth extends Handler
         switch (messageID) {
             case NxtConnection.CONNECT_OK:
                 Toast.makeText(main, "Connected", Toast.LENGTH_SHORT).show();
+                Log.i("Bluetooth", "connected");
 
                 isConnected = true;
                 showMovementButtons(true);

@@ -20,7 +20,6 @@ public class Main extends AppCompatActivity
     private Movement movement;
     public CurrentLayout currentLayout;
     private boolean gyroActivated = false;
-    private boolean gyroRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,7 +45,7 @@ public class Main extends AppCompatActivity
         @Override
         public void onSensorChanged(SensorEvent event)
         {
-            if (bluetooth != null && bluetooth.isConnected() && gyroActivated && gyroRunning)
+            if (bluetooth != null && bluetooth.isConnected() && gyroActivated)
             {
                 double roll = Math.min(event.values[2], 50);
                 double pitch = Math.min(event.values[1], 25);
@@ -172,15 +171,9 @@ public class Main extends AppCompatActivity
         switch (view.getId()) {
             case R.id.btn_connect:
                 if (!bluetooth.isConnected())
-                {
                     bluetooth.connect();
-                    gyroRunning = true;
-                }
                 else
-                {
                     bluetooth.disconnect();
-                    gyroRunning = false;
-                }
                 break;
 
             case R.id.btn_forwards:
@@ -201,7 +194,6 @@ public class Main extends AppCompatActivity
 
             case R.id.btn_stop:
                 gyroActivated = false;
-                gyroRunning = false;
                 movement.setMovement(MovementMode.stop);
                 break;
 
@@ -231,7 +223,6 @@ public class Main extends AppCompatActivity
                 {
                     bluetooth.disconnect();
                     gyroActivated = false;
-                    gyroRunning = false;
                     bluetooth.showMovementButtons(true);
                 }
                 else
@@ -247,7 +238,6 @@ public class Main extends AppCompatActivity
     public void stopAndDisconnect()
     {
         gyroActivated = false;
-        gyroRunning = false;
         movement.setMovement(MovementMode.stop);
 
         if(bluetooth != null)
