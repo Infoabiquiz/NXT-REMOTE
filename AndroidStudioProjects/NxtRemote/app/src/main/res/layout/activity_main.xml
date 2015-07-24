@@ -84,7 +84,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Swtich Layout"
+            android:text="Switch Layout"
             android:id="@+id/btn_switch_layout"
             android:layout_gravity="right"
             android:onClick="onClick" />

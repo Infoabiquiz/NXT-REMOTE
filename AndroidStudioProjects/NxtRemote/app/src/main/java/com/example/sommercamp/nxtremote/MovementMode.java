@@ -5,7 +5,7 @@ package com.example.sommercamp.nxtremote;
  *
  */
 
-public enum CurrentMovement
+public enum MovementMode
 {
     forwards,
     backwards,

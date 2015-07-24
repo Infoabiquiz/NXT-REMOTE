@@ -20,6 +20,7 @@ public class Main extends AppCompatActivity
     private Movement movement;
     public CurrentLayout currentLayout;
     private boolean gyroActivated = false;
+    private boolean gyroRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -45,7 +46,7 @@ public class Main extends AppCompatActivity
         @Override
         public void onSensorChanged(SensorEvent event)
         {
-            if (bluetooth != null && bluetooth.isConnected() && gyroActivated)
+            if (bluetooth != null && bluetooth.isConnected() && gyroActivated && gyroRunning)
             {
                 double roll = Math.min(event.values[2], 50);
                 double pitch = Math.min(event.values[1], 25);
@@ -62,8 +63,9 @@ public class Main extends AppCompatActivity
                     movement.setEnginePower((int)(pitch * 2 + 50),
                            (int)((pitch*2 + roll) * 2));
                 }
-                else {
-                   movement.setEnginePower((int)((pitch*2 - roll) * 2),
+                else
+                {
+                    movement.setEnginePower((int)((pitch*2 - roll) * 2),
                             (int)(pitch * 2 + 50));
                 }
             }
@@ -167,34 +169,40 @@ public class Main extends AppCompatActivity
 
     public void onClick(View view)
     {
-        switch (view.getId())
-        {
+        switch (view.getId()) {
             case R.id.btn_connect:
-                if(!bluetooth.isConnected())
+                if (!bluetooth.isConnected())
+                {
                     bluetooth.connect();
+                    gyroRunning = true;
+                }
                 else
+                {
                     bluetooth.disconnect();
+                    gyroRunning = false;
+                }
                 break;
 
             case R.id.btn_forwards:
-                movement.moveForwards();
+                movement.setMovement(MovementMode.forwards);
                 break;
 
             case R.id.btn_backwards:
-                movement.moveBackwards();
+                movement.setMovement(MovementMode.backwards);
                 break;
 
             case R.id.btn_left:
-                movement.turnLeft();
+                movement.setMovement(MovementMode.left);
+                break;
+
+            case R.id.btn_right:
+                movement.setMovement(MovementMode.right);
                 break;
 
             case R.id.btn_stop:
                 gyroActivated = false;
-                movement.stop();
-                break;
-
-            case R.id.btn_right:
-                movement.turnRight();
+                gyroRunning = false;
+                movement.setMovement(MovementMode.stop);
                 break;
 
             case R.id.btn_connect2:
@@ -223,6 +231,7 @@ public class Main extends AppCompatActivity
                 {
                     bluetooth.disconnect();
                     gyroActivated = false;
+                    gyroRunning = false;
                     bluetooth.showMovementButtons(true);
                 }
                 else
@@ -238,7 +247,8 @@ public class Main extends AppCompatActivity
     public void stopAndDisconnect()
     {
         gyroActivated = false;
-        movement.stop();
+        gyroRunning = false;
+        movement.setMovement(MovementMode.stop);
 
         if(bluetooth != null)
             bluetooth.disconnect();

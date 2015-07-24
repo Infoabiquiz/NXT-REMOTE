@@ -13,7 +13,7 @@ public class Movement
     private int leftEnginePower;
     private int rightEnginePower;
 
-    private CurrentMovement currentMovement;
+    private MovementMode currentMovement;
     private final static int startValue = 65;
     private int clickCounter = 65;
 
@@ -22,76 +22,55 @@ public class Movement
         this.bluetooth = bluetooth;
     }
 
-    public void moveForwards()
+    public void setMovement(MovementMode nextMovement)
     {
         if(!bluetooth.isConnected())
             return;
 
-        handleMovementStateChanges(CurrentMovement.forwards);
+        handleMovementStateChanges(nextMovement);
 
-        setEnginePower(clickCounter, clickCounter);
+        switch(nextMovement)
+        {
+            case forwards:
+                setEnginePower(clickCounter, clickCounter);
+                break;
+
+            case backwards:
+                setEnginePower(-clickCounter, -clickCounter);
+                break;
+
+            case left:
+                setEnginePower(-clickCounter + 10, clickCounter - 10);
+                break;
+
+            case right:
+                setEnginePower(clickCounter - 10, -clickCounter + 10);
+                break;
+
+            case stop:
+                setEnginePower(-leftEnginePower, -rightEnginePower);
+                try
+                {
+                    Thread.sleep(100);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                setEnginePower(0, 0);
+                break;
+        }
     }
 
-    public void moveBackwards()
+    private void handleMovementStateChanges(MovementMode mode)
     {
-        if(!bluetooth.isConnected())
-            return;
-
-        handleMovementStateChanges(CurrentMovement.backwards);
-
-        setEnginePower(-clickCounter, -clickCounter);
-    }
-
-    public void turnRight()
-    {
-        if(!bluetooth.isConnected())
-            return;
-
-        handleMovementStateChanges(CurrentMovement.right);
-
-        setEnginePower(clickCounter - 10, -clickCounter + 10);
-    }
-
-    public void turnLeft()
-    {
-        if(!bluetooth.isConnected())
-            return;
-
-        handleMovementStateChanges(CurrentMovement.left);
-
-        setEnginePower(-clickCounter + 10, clickCounter - 10);
-    }
-
-    private void handleMovementStateChanges(CurrentMovement nextMovement)
-    {
-        if (currentMovement == nextMovement)
+        if (currentMovement == mode)
             clickCounter += 10;
         else
         {
             clickCounter = startValue;
-            currentMovement = nextMovement;
+            currentMovement = mode;
         }
-    }
-
-    public void stop()
-    {
-        if(!bluetooth.isConnected())
-            return;
-
-        setEnginePower(-leftEnginePower, -rightEnginePower);
-
-        try
-        {
-            Thread.sleep(100);
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
-
-        setEnginePower(0, 0);
-        clickCounter = startValue;
-        currentMovement = CurrentMovement.stop;
     }
 
     public void setEnginePower(int leftEngine, int rightEngine)

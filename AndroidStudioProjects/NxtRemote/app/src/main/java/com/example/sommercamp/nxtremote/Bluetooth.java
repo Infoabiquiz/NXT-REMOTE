@@ -58,10 +58,7 @@ public class Bluetooth extends Handler
         {
             nxtConnection = new NxtConnection(main, this, bluetoothAdapter);
             nxtConnection.setMACAddress(nxtMacAddress);
-            if(main.currentLayout == CurrentLayout.main)
-                main.findViewById(R.id.btn_connect).setEnabled(false);
-            else
-                main.findViewById(R.id.btn_connect2).setEnabled(false);
+            enableConnectButton(false);
             nxtConnection.start();
         }
     }
@@ -82,6 +79,11 @@ public class Bluetooth extends Handler
             else
                 ((Button)main.findViewById(R.id.btn_connect2)).setText("Connect");
         }
+    }
+
+    public void forceStopAndDisconnect()
+    {
+
     }
 
     public boolean isConnected()
@@ -115,10 +117,7 @@ public class Bluetooth extends Handler
                 break;
         }
 
-        if(main.currentLayout == CurrentLayout.main)
-            main.findViewById(R.id.btn_connect).setEnabled(true);
-        else
-            main.findViewById(R.id.btn_connect2).setEnabled(true);
+        enableConnectButton(true);
     }
 
     public void showMovementButtons(boolean show)
@@ -154,5 +153,13 @@ public class Bluetooth extends Handler
         message.setData(myBundle);
 
         nxtConnection.getHandler().sendMessage(message);
+    }
+
+    private void enableConnectButton(boolean enable)
+    {
+        if(main.currentLayout == CurrentLayout.main)
+            main.findViewById(R.id.btn_connect).setEnabled(enable);
+        else
+            main.findViewById(R.id.btn_connect2).setEnabled(enable);
     }
 }
